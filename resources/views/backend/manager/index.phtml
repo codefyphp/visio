@@ -1,0 +1,120 @@
+<?php
+
+use Codefy\Framework\Proxy\Codefy;
+
+use function Codefy\Framework\Helpers\trans;
+
+$this->parent('framework::app-layout');
+$this->block('content', function ($params) {
+
+$pagesTabActive = ! isset($_GET['tab']) || $_GET['tab'] === 'pages' ? 'active' : '';
+$settingsTabActive = isset($_GET['tab']) && $_GET['tab'] === 'settings' ? 'active' : '';
+$setting = phpb_instance('setting');
+?>
+
+<main class="container mx-auto px-6 py-16 override-width">
+    <?=Codefy::$PHP->flash->display();?>
+    <div class="text-center mb-12">
+        <h2 class="text-4xl font-semibold text-slate-800 mb-3"><?= phpb_trans('website-manager.title') ?></h2>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link <?= phpb_e($pagesTabActive) ?>" data-toggle="tab" href="#pages"><?= phpb_trans('website-manager.pages') ?></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= phpb_e($settingsTabActive) ?>" data-toggle="tab" href="#settings"><?= phpb_trans('website-manager.settings') ?></a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="pages" class="tab-pane <?= phpb_e($pagesTabActive) ?>">
+                    <div class="main-spacing">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col"><?= phpb_trans('website-manager.name') ?></th>
+                                    <th scope="col"><?= phpb_trans('website-manager.route') ?></th>
+                                    <th scope="col"><?= phpb_trans('website-manager.actions') ?></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                foreach ($params['pages'] as $page):
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <?= phpb_e($page->getName()) ?>
+                                        </td>
+                                        <td>
+                                            <?= phpb_e($page->getRoute()) ?>
+                                        </td>
+                                        <td class="actions">
+                                            <a href="<?= phpb_e(phpb_full_url($page->getRoute())) ?>" target="_blank" class="btn btn-light btn-sm">
+                                                <span><?= phpb_trans('website-manager.view') ?></span> <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="<?= phpb_url('pagebuilder', ['page' => $page->getId()]) ?>" class="btn btn-primary btn-sm">
+                                                <span><?= phpb_trans('website-manager.edit') ?></span> <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="<?= phpb_url('website_manager', ['route' => 'page_settings', 'action' => 'edit', 'page' => $page->getId()]) ?>" class="btn btn-secondary btn-sm">
+                                                <span><?= phpb_trans('website-manager.settings') ?></span> <i class="fas fa-cog"></i>
+                                            </a>
+                                            <a href="<?= phpb_url('website_manager', ['route' => 'page_settings', 'action' => 'destroy', 'page' => $page->getId()]) ?>" class="btn btn-danger btn-sm">
+                                                <span><?= phpb_trans('website-manager.remove') ?></span> <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php
+                                endforeach;
+                                ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <hr class="mb-4">
+
+                    <a href="<?= phpb_url('website_manager', ['route' => 'page_settings', 'action' => 'create']) ?>" class="inline-flex items-center py-2 px-6 bg-gradient-to-r from-indigo-700 to-pink-600 hover:bg-opacity-95 text-white rounded-md">
+                        <?= phpb_trans('website-manager.add-new-page') ?>
+                    </a>
+                </div>
+
+                <div id="settings" class="tab-pane <?= phpb_e($settingsTabActive) ?>">
+                    <form method="post" action="<?= phpb_url('website_manager', ['route' => 'settings', 'action' => 'update', 'tab' => 'settings']) ?>">
+
+                        <div class="main-spacing">
+                            <div class="form-group mb-4 mt-6">
+                                <label for="languages" class="mb-2">
+                                    <?= phpb_trans('website-manager.website-languages') ?>
+                                    <span class="text-muted">(<?=trans('Use Ctrl/Cmd to select multiple.');?>)</span>
+                                </label>
+                                <select class="form-control" id="languages" name="languages[]" title="<?= phpb_trans('website-manager.languages-selector-placeholder') ?>" required multiple>
+                                    <?php
+                                    foreach (phpb_trans('languages') as $locale => $localeText):
+                                        ?>
+                                        <option value="<?= phpb_e($locale) ?>" <?= phpb_e($setting::has('languages', $locale)) !== '' && phpb_e($setting::has('languages', $locale)) !== '0' ? 'selected' : '' ?>><?= phpb_e($localeText) ?></option>
+                                    <?php
+                                    endforeach;
+                                    ?>
+                                </select>
+                            </div>
+
+                            <hr class="mb-4">
+
+                            <button class="inline-flex items-center py-2 px-6 bg-gradient-to-r from-indigo-700 to-pink-600 hover:bg-opacity-95 text-white rounded-md">
+                                <?= phpb_trans('website-manager.save-settings'); ?>
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<?php }); ?>
