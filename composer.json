@@ -1,8 +1,8 @@
 {
-    "name": "codefyphp/skeleton",
+    "name": "codefyphp/visio",
     "type": "project",
-    "description": "Skeleton package for creating a new CodefyPHP Framework project.",
-    "keywords": ["codefy","codefyphp","codefy-php","routing","skeleton"],
+    "description": "Starter app that provides a simple and quick way to build websites in minutes.",
+    "keywords": ["codefy","codefyphp","codefy-php","routing","skeleton","visio"],
     "license": "MIT",
     "authors": [
         {
