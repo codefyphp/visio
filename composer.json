@@ -30,10 +30,14 @@
         ]
     },
     "scripts": {
-      "codestan": "phpstan analyse -l max",
-      "cs-check": "phpcs",
-      "cs-fix": "phpcbf",
-      "test": "vendor/bin/pest"
+        "codestan": "phpstan analyse -l max",
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "vendor/bin/pest",
+        "post-install-cmd": [
+            "touch .enc.key",
+            "cp .env.example .env"
+        ]
     },
     "config": {
         "optimize-autoloader": true,
