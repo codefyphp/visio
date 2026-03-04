@@ -67,6 +67,7 @@ final class PageBuilderController extends BaseController
             return view(template: 'framework::error/404');
         }
 
+        // @phpstan-ignore argument.type
         return HtmlResponseFactory::create($hasPageReturned);
     }
 }

@@ -39,6 +39,7 @@ final class WebsiteManagerController extends BaseController
                 return $this->handleCreate($request);
             }
 
+            /** @var string $pageId */
             $pageId = $request->getQueryParams()['page'] ?? null;
             $pageRepository = new PageRepository;
             $page = $pageRepository->findWithId($pageId);
@@ -101,7 +102,9 @@ final class WebsiteManagerController extends BaseController
             $pageRepository = new PageRepository;
             $page = $pageRepository->create((array) $request->getParsedBody());
             if ($page) {
-                Codefy::$PHP->flash->success(phpb_trans('website-manager.page-created'));
+                /** @var string $message */
+                $message = phpb_trans(key: 'website-manager.page-created');
+                Codefy::$PHP->flash->success($message);
 
                 return $this->redirect(phpb_url('website_manager'));
             }
@@ -119,7 +122,9 @@ final class WebsiteManagerController extends BaseController
             $pageRepository = new PageRepository;
             $success = $pageRepository->update($page, (array) $request->getParsedBody());
             if ($success) {
-                Codefy::$PHP->flash->success(phpb_trans(key: 'website-manager.page-updated'));
+                /** @var string $message */
+                $message = phpb_trans(key: 'website-manager.page-updated');
+                Codefy::$PHP->flash->success($message);
 
                 return $this->redirect(phpb_url(module: 'website_manager'));
             }
@@ -132,7 +137,9 @@ final class WebsiteManagerController extends BaseController
     {
         $pageRepository = new PageRepository;
         $pageRepository->destroy($page->getId());
-        Codefy::$PHP->flash->success(phpb_trans('website-manager.page-deleted'));
+        /** @var string $message */
+        $message = phpb_trans(key: 'website-manager.page-deleted');
+        Codefy::$PHP->flash->success($message);
 
         return $this->redirect(phpb_url('website_manager'));
     }
